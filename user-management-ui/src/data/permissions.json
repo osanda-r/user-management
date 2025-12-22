@@ -1,0 +1,22 @@
+[
+  {
+    "permission_id": 1,
+    "permission_name": "USER_CREATE",
+    "module_name": "User"
+  },
+  {
+    "permission_id": 2,
+    "permission_name": "USER_EDIT",
+    "module_name": "User"
+  },
+  {
+    "permission_id": 3,
+    "permission_name": "USER_DELETE",
+    "module_name": "User"
+  },
+  {
+    "permission_id": 4,
+    "permission_name": "ROLE_ASSIGN",
+    "module_name": "Role"
+  }
+]

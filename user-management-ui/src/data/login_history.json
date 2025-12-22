@@ -1,0 +1,18 @@
+[
+  {
+    "login_id": 101,
+    "user_id": 1,
+    "login_time": "2025-09-01T08:45:00",
+    "logout_time": "2025-09-01T17:30:00",
+    "ip_address": "192.168.1.10",
+    "device_info": "Chrome / Windows 10"
+  },
+  {
+    "login_id": 102,
+    "user_id": 2,
+    "login_time": "2025-09-02T09:20:00",
+    "logout_time": null,
+    "ip_address": "192.168.1.12",
+    "device_info": "Edge / Windows 11"
+  }
+]

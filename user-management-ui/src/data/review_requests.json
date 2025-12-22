@@ -1,0 +1,11 @@
+[
+  {
+    "request_id": 3001,
+    "user_id": 3,
+    "request_type": "USER_STATUS_CHANGE",
+    "old_value": { "status": "Inactive" },
+    "new_value": { "status": "Active" },
+    "request_status": "Pending",
+    "requested_at": "2025-09-02T09:50:00"
+  }
+]

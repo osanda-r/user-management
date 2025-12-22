@@ -1,0 +1,41 @@
+[
+  {
+    "user_id": 1,
+    "username": "admin01",
+    "first_name": "System",
+    "last_name": "Admin",
+    "full_name": "System Admin",
+    "email": "admin@example.com",
+    "phone": "0771234567",
+    "password": "$2a$10$hashedpassword",
+    "status": "Active",
+    "department_id": 1,
+    "last_login_at": "2025-09-01T08:45:00"
+  },
+  {
+    "user_id": 2,
+    "username": "manager01",
+    "first_name": "Project",
+    "last_name": "Manager",
+    "full_name": "Project Manager",
+    "email": "manager@example.com",
+    "phone": "0779876543",
+    "password": "$2a$10$hashedpassword",
+    "status": "Active",
+    "department_id": 2,
+    "last_login_at": "2025-09-02T09:20:00"
+  },
+  {
+    "user_id": 3,
+    "username": "user01",
+    "first_name": "Normal",
+    "last_name": "User",
+    "full_name": "Normal User",
+    "email": "user@example.com",
+    "phone": "0775556666",
+    "password": "$2a$10$hashedpassword",
+    "status": "Inactive",
+    "department_id": 2,
+    "last_login_at": null
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "role_id": 1,
+    "role_name": "Admin",
+    "description": "Full system access"
+  },
+  {
+    "role_id": 2,
+    "role_name": "Manager",
+    "description": "User and request management"
+  },
+  {
+    "role_id": 3,
+    "role_name": "User",
+    "description": "Limited access"
+  },
+  {
+    "role_id": 4,
+    "role_name": "Any",
+    "description": "Test role"
+  }
+]

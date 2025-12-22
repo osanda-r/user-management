@@ -1,0 +1,13 @@
+[
+  {
+    "audit_id": 1001,
+    "user_id": 1,
+    "action": "UPDATE",
+    "entity_name": "USER",
+    "entity_id": 3,
+    "old_value": { "status": "Inactive" },
+    "new_value": { "status": "Active" },
+    "ip_address": "192.168.1.10",
+    "timestamp": "2025-09-02T10:15:00"
+  }
+]
