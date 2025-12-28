@@ -11,7 +11,7 @@ const lightTheme = {
     surface: "#FFFFFF",
 
     // Brand palette (used across UI)
-    primary: "#7C3AED", // purple
+    primary: "#3a85edff", // purple
     secondary: "#F472B6", // pink
     accent: "#34D399", // green
 
