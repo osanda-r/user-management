@@ -4,7 +4,7 @@ import api from "@/services/api";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: localStorage.getItem("token"),
-    user: null as any,
+    user: JSON.parse(localStorage.getItem("user") || "null") as any,
   }),
 
   getters: {
@@ -18,12 +18,14 @@ export const useAuthStore = defineStore("auth", {
       this.token = res.data.token;
       this.user = res.data.user;
       localStorage.setItem("token", this.token!);
+      localStorage.setItem("user", JSON.stringify(this.user));
     },
 
     logout() {
       this.token = null;
       this.user = null;
-      localStorage.clear();
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
 });

@@ -61,12 +61,13 @@ const rail = ref(false);
 const auth = useAuthStore();
 const user = auth.user;
 
-const initials = computed(() =>
-  user?.full_name
-    ?.split(" ")
+const initials = computed(() => {
+  const name = user?.full_name || "Developer User";
+  return name
+    .split(" ")
     .map((n: string) => n[0])
-    .join("")
-);
+    .join("");
+});
 
 // Sidebar menu
 const menu = [
@@ -102,8 +103,12 @@ const menu = [
   },
 ];
 
-//Role-based filtering
-const filteredMenu = computed(() => menu.filter((item) => item.roles.includes(auth.role)));
+// Role-based filtering — if no authenticated role, show full menu (dev / guest view)
+const filteredMenu = computed(() => {
+  const role = auth.role;
+  if (!role) return menu;
+  return menu.filter((item) => item.roles.includes(role));
+});
 </script>
 
 <style scoped>
