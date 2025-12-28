@@ -1,32 +1,21 @@
-import { createRouter, createWebHistory } from "vue-router";
-import usersRoutes from "./users";
-
-const routes = [
-  { path: "/", redirect: "/users" },
-  ...usersRoutes,
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/views/auth/LoginView.vue"),
-  },
-];
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-});
+  routes: [],
+})
 
-import { useAuthStore } from "@/stores/auth";
-router.beforeEach((to) => {
-  const auth = useAuthStore();
+import { useAuthStore } from '@/stores/auth'
+  router.beforeEach((to) => {
+  const auth = useAuthStore()
 
   if (to.meta.auth && !auth.isAuthenticated) {
-    return "/login";
+    return '/login'
   }
 
   if (to.meta.roles && !to.meta.roles.includes(auth.role)) {
-    return "/unauthorized";
+    return '/unauthorized'
   }
-});
+})
 
-export default router;
+export default router
