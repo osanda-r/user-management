@@ -1,153 +1,24 @@
-:root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --primary: #7c3aed;
-  --secondary: #f472b6;
-  --accent: #34d399;
-  --muted: #6b7280;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--v-theme-primary));
+  border-radius: 4px;
 }
 
-html,
-body,
-#app {
-  height: 100%;
-  background: var(--bg);
-  color: #0f172a;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Desktop: offset main content to account for the permanent drawer and app-bar */
+@media (min-width: 960px) {
+  .v-application .v-main {
+    margin-left: 260px; /* match drawer width */
+    padding-top: 100px; /* match app-bar height */
+  }
 }
 
-/* App container */
-.v-application {
-  background-color: var(--bg) !important;
-}
-
-/* Card tweaks */
-.v-card {
-  border-radius: 12px;
-}
-
-/* Headings */
-h2 {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-/* Navigation drawer */
-.app-sidebar .v-navigation-drawer {
-  padding-top: 12px;
-}
-
-/* List items hover */
-.v-list-item:hover {
-  background: rgba(37, 99, 235, 0.04);
-}
-
-/* Small text muted */
-.text--secondary {
-  color: var(--muted) !important;
-}
-
-/* Data table adjustments */
-.v-data-table thead th {
-  color: var(--muted);
-  font-weight: 600;
-}
-.v-data-table .v-data-table__divider {
-  border-color: rgba(15, 23, 42, 0.04);
-}
-
-/* Buttons */
-.v-btn {
-  text-transform: none;
-  font-weight: 600;
-}
-
-/* Avatar */
-.v-avatar img {
-  object-fit: cover;
-}
-
-/* Sidebar gradient and styles */
-.app-sidebar {
-  background: var(--surface);
-  color: var(--text-primary, #0f172a);
-  border-right: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-}
-.sidebar-brand .logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), #60a5fa);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-}
-.sidebar-brand .text-h6 {
-  font-size: 1rem;
-  line-height: 1.1;
-}
-.app-sidebar .v-list-item {
-  color: var(--text-primary);
-}
-.app-sidebar .v-list-item--active {
-  background: linear-gradient(90deg, rgba(124, 58, 237, 0.12), rgba(244, 114, 182, 0.08));
-  border-radius: 8px;
-}
-
-/* Banner style for dashboard top cards */
-.banner-row {
-  gap: 18px;
-}
-.banner-card {
-  height: 120px;
-  border-radius: 12px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px;
-}
-.banner-1 {
-  background: linear-gradient(135deg, #34d399, #10b981);
-}
-.banner-2 {
-  background: linear-gradient(135deg, #7c3aed, #c084fc);
-}
-.banner-3 {
-  background: linear-gradient(135deg, #06b6d4, #60a5fa);
-}
-.banner-4 {
-  background: linear-gradient(135deg, #f472b6, #fb7185);
-}
-.banner-label {
-  opacity: 0.9;
-}
-.banner-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-}
-
-/* Small tweaks */
-.dashboard-header .subtitle-2 {
-  color: var(--textSecondary, #475569);
-}
-
-.v-application .v-navigation-drawer {
-  z-index: 10;
-}
-.v-application .v-app-bar {
-  z-index: 20;
-}
-.v-application .v-main {
-  margin-top: 0;
+/* Mobile: no left offset, but leave space for app-bar */
+@media (max-width: 959px) {
+  .v-application .v-main {
+    margin-left: 0;
+    padding-top: 56px;
+  }
 }
