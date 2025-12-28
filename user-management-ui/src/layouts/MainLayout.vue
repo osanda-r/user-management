@@ -2,7 +2,7 @@
   <v-app>
     <Sidebar />
 
-    <v-app-bar color="primary" flat>
+    <v-app-bar app clipped-left color="primary" flat>
       <v-app-bar-title>User Management System</v-app-bar-title>
       <v-spacer />
       <v-btn icon @click="logout">
@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import Sidebar from '@/components/Sidebar.vue'
-import { useAuthStore } from '@/stores/auth'
+import Sidebar from "@/components/Sidebar.vue";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
-const logout = () => auth.logout()
+const auth = useAuthStore();
+const logout = () => auth.logout();
 </script>

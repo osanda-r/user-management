@@ -19,7 +19,7 @@ body,
 
 /* App container */
 .v-application {
-  background-color: transparent !important;
+  background-color: var(--bg) !important;
 }
 
 /* Card tweaks */
@@ -70,8 +70,9 @@ h2 {
 
 /* Sidebar gradient and styles */
 .app-sidebar {
-  background: linear-gradient(180deg, rgba(124, 58, 237, 0.06), rgba(244, 114, 182, 0.04));
+  background: var(--surface);
   color: var(--text-primary, #0f172a);
+  border-right: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .sidebar-brand {
@@ -90,6 +91,10 @@ h2 {
   justify-content: center;
   color: white;
   font-weight: 700;
+}
+.sidebar-brand .text-h6 {
+  font-size: 1rem;
+  line-height: 1.1;
 }
 .app-sidebar .v-list-item {
   color: var(--text-primary);
@@ -135,4 +140,14 @@ h2 {
 /* Small tweaks */
 .dashboard-header .subtitle-2 {
   color: var(--textSecondary, #475569);
+}
+
+.v-application .v-navigation-drawer {
+  z-index: 10;
+}
+.v-application .v-app-bar {
+  z-index: 20;
+}
+.v-application .v-main {
+  margin-top: 0;
 }

@@ -1,11 +1,5 @@
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    :rail="rail"
-    permanent
-    app
-    class="app-sidebar"
-  >
+  <v-navigation-drawer v-model="drawer" :rail="rail" permanent app width="260" class="app-sidebar">
     <!-- Logo / Brand -->
     <div class="sidebar-brand">
       <div class="logo">UM</div>
@@ -14,9 +8,9 @@
         <div class="text-caption text--secondary">Admin Console</div>
       </div>
 
-      <div style="margin-left:auto">
+      <div style="margin-left: auto">
         <v-btn icon variant="text" @click="rail = !rail">
-          <v-icon>{{ rail ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
+          <v-icon>{{ rail ? "mdi-chevron-right" : "mdi-chevron-left" }}</v-icon>
         </v-btn>
       </div>
     </div>
@@ -33,7 +27,7 @@
         :title="item.title"
         active-class="v-list-item--active"
       >
-        <div class="d-flex align-center" style="width:100%;">
+        <div class="d-flex align-center" style="width: 100%">
           <v-icon class="mr-3">{{ item.icon }}</v-icon>
           <div v-if="!rail">
             <div class="font-weight-medium">{{ item.title }}</div>
@@ -58,45 +52,58 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { ref, computed } from "vue";
+import { useAuthStore } from "@/stores/auth";
 
-const drawer = ref(true)
-const rail = ref(false)
+const drawer = ref(true);
+const rail = ref(false);
 
-const auth = useAuthStore()
-const user = auth.user
+const auth = useAuthStore();
+const user = auth.user;
 
 const initials = computed(() =>
   user?.full_name
-    ?.split(' ')
+    ?.split(" ")
     .map((n: string) => n[0])
-    .join('')
-)
+    .join("")
+);
 
-// Sidebar menu 
+// Sidebar menu
 const menu = [
-  { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard', roles: ['Admin', 'Manager', 'User'] },
+  {
+    title: "Dashboard",
+    icon: "mdi-view-dashboard",
+    to: "/dashboard",
+    roles: ["Admin", "Manager", "User"],
+  },
 
-  { title: 'Users', icon: 'mdi-account-group', to: '/users', roles: ['Admin', 'Manager'] },
+  { title: "Users", icon: "mdi-account-group", to: "/users", roles: ["Admin", "Manager"] },
 
-  { title: 'Roles & Permissions', icon: 'mdi-shield-key', to: '/roles', roles: ['Admin'] },
+  { title: "Roles & Permissions", icon: "mdi-shield-key", to: "/roles", roles: ["Admin"] },
 
-  { title: 'Departments', icon: 'mdi-office-building', to: '/departments', roles: ['Admin'] },
+  { title: "Departments", icon: "mdi-office-building", to: "/departments", roles: ["Admin"] },
 
-  { title: 'Review Requests', icon: 'mdi-check-decagram', to: '/review-requests', roles: ['Admin', 'Manager'] },
+  {
+    title: "Review Requests",
+    icon: "mdi-check-decagram",
+    to: "/review-requests",
+    roles: ["Admin", "Manager"],
+  },
 
-  { title: 'Login History', icon: 'mdi-login', to: '/login-history', roles: ['Admin'] },
+  { title: "Login History", icon: "mdi-login", to: "/login-history", roles: ["Admin"] },
 
-  { title: 'Audit Log', icon: 'mdi-history', to: '/audit-log', roles: ['Admin'] },
+  { title: "Audit Log", icon: "mdi-history", to: "/audit-log", roles: ["Admin"] },
 
-  { title: 'Activity Log', icon: 'mdi-chart-line', to: '/activity-log', roles: ['Admin', 'Manager'] },
-]
+  {
+    title: "Activity Log",
+    icon: "mdi-chart-line",
+    to: "/activity-log",
+    roles: ["Admin", "Manager"],
+  },
+];
 
 //Role-based filtering
-const filteredMenu = computed(() =>
-  menu.filter(item => item.roles.includes(auth.role))
-)
+const filteredMenu = computed(() => menu.filter((item) => item.roles.includes(auth.role)));
 </script>
 
 <style scoped>
