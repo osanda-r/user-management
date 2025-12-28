@@ -1,5 +1,7 @@
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 
 const lightTheme = {
@@ -8,18 +10,21 @@ const lightTheme = {
     background: "#F8FAFC",
     surface: "#FFFFFF",
 
-    primary: "#2563EB",
-    secondary: "#7C3AED",
-    accent: "#22C55E",
+    // Brand palette (used across UI)
+    primary: "#7C3AED", // purple
+    secondary: "#F472B6", // pink
+    accent: "#34D399", // green
 
-    info: "#0EA5E9",
+    // Utility
+    info: "#06B6D4",
     success: "#16A34A",
     warning: "#F59E0B",
-    error: "#DC2626",
+    error: "#EF4444",
 
+    // Text + borders
     textPrimary: "#0F172A",
     textSecondary: "#475569",
-    border: "#E2E8F0",
+    border: "#E6E9F2",
   },
 };
 
@@ -46,6 +51,8 @@ const darkTheme = {
 };
 
 export const vuetify = createVuetify({
+  components,
+  directives,
   theme: {
     defaultTheme: "lightTheme",
     themes: {
@@ -98,10 +105,40 @@ export const vuetify = createVuetify({
     // Navigation
     VNavigationDrawer: {
       elevation: 1,
+      width: 260,
+      style: "border-right:1px solid rgba(0,0,0,0.04);",
     },
 
     VAppBar: {
       elevation: 0,
+    },
+
+    // Lists
+    VList: {
+      density: "comfortable",
+    },
+
+    VListItem: {
+      rounded: "lg",
+      density: "comfortable",
+      variant: "text",
+    },
+
+    VListItemTitle: {
+      class: "font-weight-medium",
+    },
+
+    VListItemSubtitle: {
+      class: "text--secondary",
+    },
+
+    // Avatars & icons
+    VAvatar: {
+      size: 40,
+    },
+
+    VIcon: {
+      size: 20,
     },
   },
 });

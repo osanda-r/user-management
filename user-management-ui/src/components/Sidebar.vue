@@ -6,44 +6,46 @@
     app
     class="app-sidebar"
   >
-    <!-- Logo ,Title -->
-    <v-list-item class="px-4">
-      <v-list-item-title class="text-h6 font-weight-bold">
-        UMS
-      </v-list-item-title>
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="logo">UM</div>
+      <div v-if="!rail">
+        <div class="text-h6 font-weight-bold">User Management</div>
+        <div class="text-caption text--secondary">Admin Console</div>
+      </div>
 
-      <template #append>
-        <v-btn
-          icon
-          variant="text"
-          @click="rail = !rail"
-        >
+      <div style="margin-left:auto">
+        <v-btn icon variant="text" @click="rail = !rail">
           <v-icon>{{ rail ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
         </v-btn>
-      </template>
-    </v-list-item>
+      </div>
+    </div>
 
     <v-divider />
 
     <!-- Menu -->
     <v-list nav density="comfortable">
-
       <v-list-item
         v-for="item in filteredMenu"
         :key="item.title"
         :to="item.to"
-        :prepend-icon="item.icon"
-        :title="item.title"
         rounded="lg"
-      />
-
+        :title="item.title"
+        active-class="v-list-item--active"
+      >
+        <div class="d-flex align-center" style="width:100%;">
+          <v-icon class="mr-3">{{ item.icon }}</v-icon>
+          <div v-if="!rail">
+            <div class="font-weight-medium">{{ item.title }}</div>
+          </div>
+        </div>
+      </v-list-item>
     </v-list>
 
-    <!-- Bottom User Info -->
     <template #append>
       <v-divider />
       <v-list-item class="px-4 py-3">
-        <v-avatar size="32" color="primary">
+        <v-avatar size="36" color="primary">
           <span class="text-white">{{ initials }}</span>
         </v-avatar>
 
