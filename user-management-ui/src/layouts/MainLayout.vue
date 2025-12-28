@@ -1,25 +1,33 @@
 <template>
   <v-app>
-    <Sidebar />
+    <div class="layout">
+      <!-- Left Sidebar -->
+      <SideBar />
 
-    <v-app-bar app clipped-left color="primary" flat>
-      <v-app-bar-title>User Management System</v-app-bar-title>
-      <v-spacer />
-      <v-btn icon @click="logout">
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main class="pa-6">
-      <router-view />
-    </v-main>
+      <!-- Right Content Area -->
+      <div class="content">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </div>
+    </div>
   </v-app>
 </template>
 
 <script setup lang="ts">
-import Sidebar from "@/components/Sidebar.vue";
-import { useAuthStore } from "@/stores/auth";
-
-const auth = useAuthStore();
-const logout = () => auth.logout();
+import SideBar from '@/components/SideBar.vue'
 </script>
+
+<style scoped>
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+.content {
+  flex: 1;
+  padding: 16px;
+  overflow: auto;
+}
+</style>

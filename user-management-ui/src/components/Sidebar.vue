@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="drawer" :rail="rail" permanent app width="260" class="app-sidebar">
     <!-- Logo / Brand -->
     <div class="sidebar-brand">
-      <div class="logo">UM</div>
+      <div class="logo">LOGO</div>
       <div v-if="!rail">
         <div class="text-h6 font-weight-bold">User Management</div>
         <div class="text-caption text--secondary">Admin Console</div>
@@ -24,7 +24,6 @@
         :key="item.title"
         :to="item.to"
         rounded="lg"
-        :title="item.title"
         active-class="v-list-item--active"
       >
         <div class="d-flex align-center" style="width: 100%">

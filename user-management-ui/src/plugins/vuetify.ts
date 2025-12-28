@@ -28,7 +28,6 @@ const lightTheme = {
   },
 };
 
-// Dark Theme (Optional)
 const darkTheme = {
   dark: true,
   colors: {
@@ -68,20 +67,15 @@ export const vuetify = createVuetify({
   },
 
   defaults: {
-    // Buttons
     VBtn: {
       rounded: "lg",
       elevation: 0,
       style: "text-transform:none;font-weight:600;",
     },
-
-    // Cards
     VCard: {
       rounded: "xl",
       elevation: 2,
     },
-
-    // Inputs
     VTextField: {
       variant: "outlined",
       density: "comfortable",
@@ -90,53 +84,38 @@ export const vuetify = createVuetify({
       variant: "outlined",
       density: "comfortable",
     },
-
-    // Tables
     VDataTable: {
       density: "comfortable",
     },
-
-    // Chips
     VChip: {
       rounded: "lg",
       label: true,
     },
-
-    // Navigation
     VNavigationDrawer: {
       elevation: 1,
       width: 260,
       style: "border-right:1px solid rgba(0,0,0,0.04);",
     },
-
     VAppBar: {
       elevation: 0,
     },
-
-    // Lists
     VList: {
       density: "comfortable",
     },
-
     VListItem: {
       rounded: "lg",
       density: "comfortable",
       variant: "text",
     },
-
     VListItemTitle: {
       class: "font-weight-medium",
     },
-
     VListItemSubtitle: {
       class: "text--secondary",
     },
-
-    // Avatars & icons
     VAvatar: {
       size: 40,
     },
-
     VIcon: {
       size: 20,
     },

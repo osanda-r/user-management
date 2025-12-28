@@ -7,18 +7,6 @@
   border-radius: 4px;
 }
 
-/* Desktop: offset main content to account for the permanent drawer and app-bar */
-@media (min-width: 960px) {
-  .v-application .v-main {
-    margin-left: 260px; /* match drawer width */
-    padding-top: 100px; /* match app-bar height */
-  }
-}
 
-/* Mobile: no left offset, but leave space for app-bar */
-@media (max-width: 959px) {
-  .v-application .v-main {
-    margin-left: 0;
-    padding-top: 56px;
-  }
-}
+
+
