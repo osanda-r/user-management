@@ -94,11 +94,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import usersData from "../../data/users.json";
 
-const users = ref(Array.isArray(usersData) ? usersData : []);
+const users = ref<any[]>([]);
 const router = useRouter();
 const search = ref("");
 const roleFilter = ref<string | null>(null);
@@ -117,6 +117,16 @@ const roles = computed(() => {
     if ((u as any).role) set.add((u as any).role);
   });
   return Array.from(set);
+});
+
+function loadUsers() {
+  const base = Array.isArray(usersData) ? usersData : [];
+  const additions = JSON.parse(localStorage.getItem("users_additions") || "[]") || [];
+  users.value = [...base, ...additions];
+}
+
+onMounted(() => {
+  loadUsers();
 });
 
 const filteredUsers = computed(() => {
@@ -142,9 +152,7 @@ function editUser(item: any) {
 }
 
 function openCreate() {
-  // open dialog for creating a new user locally
-  editForm.value = { username: "", full_name: "", email: "", status: "Active" };
-  editDialog.value = true;
+  router.push({ name: "UserCreate" });
 }
 
 function deleteUser(item: any) {
