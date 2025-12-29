@@ -33,107 +33,153 @@
     <v-data-table
       :headers="headers"
       :items="filteredUsers"
-      item-key="id"
+      item-key="user_id"
       :items-per-page="10"
-      class="elevation-1"
+      class="elevation-1 users-table"
     >
-      <template #item.name="{ item }">
-        <div class="d-flex align-center">
-          <v-avatar size="36" class="mr-3">
-            <img :src="item.avatar || avatarPlaceholder(item.name)" alt="avatar" />
-          </v-avatar>
-          <div>
-            <div class="font-weight-medium">{{ item.name }}</div>
-            <div class="text--secondary text-caption">{{ item.email }}</div>
-          </div>
+      <template #item.user_id="{ item }">
+        <div class="text-caption">#{{ item.user_id }}</div>
+      </template>
+
+      <template #item.username="{ item }">
+        <div>
+          <div class="font-weight-medium">{{ item.full_name || item.username }}</div>
+          <div class="text--secondary text-caption">{{ item.username }}</div>
         </div>
       </template>
 
+      <template #item.email="{ item }">
+        <div class="text-truncate">{{ item.email }}</div>
+      </template>
+
       <template #item.status="{ item }">
-        <v-chip :color="item.status === 'Active' ? 'success' : 'grey darken-1'" small>
+        <v-chip :color="item.status === 'Active' ? 'success' : 'grey'" small>
           {{ item.status }}
         </v-chip>
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn icon @click="editUser(item)">
+        <v-btn icon @click="editUser(item)" :title="`Edit ${item.username}`">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn icon @click="deleteUser(item)">
+        <v-btn icon @click="deleteUser(item)" :title="`Delete ${item.username}`">
           <v-icon color="error">mdi-delete</v-icon>
         </v-btn>
       </template>
 
       <template #no-data>
-        <v-alert type="info" border="left">No users found.</v-alert>
+        <v-alert type="info">No users found.</v-alert>
       </template>
     </v-data-table>
+    <!-- Edit dialog -->
+    <v-dialog v-model="editDialog" max-width="600">
+      <v-card>
+        <v-card-title>{{ editForm?.user_id ? "Edit User" : "Edit User" }}</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent>
+            <v-text-field v-model="editForm.username" label="Username" />
+            <v-text-field v-model="editForm.full_name" label="Full name" />
+            <v-text-field v-model="editForm.email" label="Email" />
+            <v-select v-model="editForm.status" :items="['Active', 'Inactive']" label="Status" />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text type="button" @click="closeEdit">Cancel</v-btn>
+          <v-btn color="primary" type="button" @click="saveEdit">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import usersData from "../../data/users.json";
 
 const users = ref(Array.isArray(usersData) ? usersData : []);
+const router = useRouter();
 const search = ref("");
 const roleFilter = ref<string | null>(null);
 
 const headers = [
-  { text: "Name", value: "name" },
-  { text: "Role", value: "role" },
-  { text: "Status", value: "status" },
-  { text: "Actions", value: "actions", sortable: false, align: "end" },
+  { text: "ID", value: "user_id", width: 80 },
+  { text: "User", value: "username" },
+  { text: "Email", value: "email" },
+  { text: "Status", value: "status", width: 140 },
+  { text: "Actions", value: "actions", sortable: false, align: "end", width: 120 },
 ];
 
 const roles = computed(() => {
   const set = new Set<string>();
   users.value.forEach((u) => {
-    if (u.role) set.add(u.role);
+    if ((u as any).role) set.add((u as any).role);
   });
   return Array.from(set);
 });
 
 const filteredUsers = computed(() => {
+  const q = search.value && search.value.toLowerCase();
   return users.value.filter((u: any) => {
     const matchesSearch =
-      !search.value ||
-      (u.name && u.name.toLowerCase().includes(search.value.toLowerCase())) ||
-      (u.email && u.email.toLowerCase().includes(search.value.toLowerCase()));
+      !q ||
+      (u.username && u.username.toLowerCase().includes(q)) ||
+      (u.full_name && u.full_name.toLowerCase().includes(q)) ||
+      (u.email && u.email.toLowerCase().includes(q));
     const matchesRole = !roleFilter.value || u.role === roleFilter.value;
     return matchesSearch && matchesRole;
   });
 });
 
-function avatarPlaceholder(name: string) {
-  const bg = "0D8ABC";
-  const color = "fff";
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    name
-  )}&background=${bg}&color=${color}`;
-}
+// edit dialog state
+const editDialog = ref(false);
+const editForm = ref<any>({ username: "", full_name: "", email: "", status: "Active" });
 
 function editUser(item: any) {
-  // TODO: wire into router or modal
-  // eslint-disable-next-line no-alert
-  alert("Edit user: " + item.name);
+  editForm.value = { ...item };
+  editDialog.value = true;
 }
 
 function openCreate() {
-  // TODO: show create form/modal
-  // eslint-disable-next-line no-alert
-  alert("Open create user form");
+  // open dialog for creating a new user locally
+  editForm.value = { username: "", full_name: "", email: "", status: "Active" };
+  editDialog.value = true;
 }
 
 function deleteUser(item: any) {
-  // confirm then remove locally
-  // eslint-disable-next-line no-alert
-  if (!confirm(`Delete ${item.name}?`)) return;
-  users.value = users.value.filter((u: any) => u.id !== item.id);
+  if (!confirm(`Delete ${item.username || item.full_name || item.user_id}?`)) return;
+  users.value = users.value.filter((u: any) => u.user_id !== item.user_id);
+}
+
+function closeEdit() {
+  editDialog.value = false;
+  editForm.value = null;
+}
+
+function saveEdit() {
+  if (!editForm.value) return;
+  const id = editForm.value.user_id;
+  const idx = users.value.findIndex((u: any) => u.user_id === id);
+  if (idx >= 0) {
+    users.value.splice(idx, 1, { ...editForm.value });
+  } else {
+    // new created locally (assign a temporary ID)
+    const maxId = users.value.reduce((m: number, u: any) => Math.max(m, u.user_id || 0), 0);
+    editForm.value.user_id = maxId + 1;
+    users.value.push({ ...editForm.value });
+  }
+  closeEdit();
 }
 
 function exportCSV() {
-  const rows = filteredUsers.value.map((u: any) => [u.id, u.name, u.email, u.role, u.status]);
+  const rows = filteredUsers.value.map((u: any) => [
+    u.user_id,
+    u.full_name || u.username,
+    u.email,
+    u.role || "",
+    u.status,
+  ]);
   const csv = [
     "ID,Name,Email,Role,Status",
     ...rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")),
@@ -149,7 +195,16 @@ function exportCSV() {
 </script>
 
 <style scoped>
-.title {
-  font-size: 1.25rem;
+.users-table .v-data-table__wrapper tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.font-weight-medium {
+  font-weight: 600;
+}
+.text-truncate {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
