@@ -100,7 +100,17 @@ const headers = [
 function loadDepartments() {
   const base = Array.isArray(departmentsData) ? departmentsData : [];
   const additions = JSON.parse(localStorage.getItem("departments_additions") || "[]") || [];
-  departments.value = [...base, ...additions];
+  const updates = JSON.parse(localStorage.getItem("departments_updates") || "{}") || {};
+  const merged = [...base, ...additions].map((d) => {
+    const upd = updates[d.department_id];
+    return upd ? { ...d, ...upd } : d;
+  });
+
+  const extraUpdated = Object.keys(updates)
+    .map((k) => Number(k))
+    .filter((id) => !merged.find((m) => m.department_id === id))
+    .map((id) => ({ department_id: id, ...updates[id] }));
+  departments.value = [...merged, ...extraUpdated];
 }
 
 onMounted(() => {
@@ -126,7 +136,6 @@ function parentName(parentId: number | null) {
 }
 
 function editDepartment(item: any) {
-  // navigate to an edit page if implemented
   router.push({ name: "DepartmentEdit", params: { id: item.department_id } }).catch(() => {});
 }
 

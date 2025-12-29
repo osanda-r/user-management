@@ -66,6 +66,18 @@ const routes: RouteRecordRaw[] = [
           auth: true,
         },
       },
+      {
+        path: "departments/create",
+        name: "DepartmentCreate",
+        component: () => import("@/views/departments/DepartmentCreate.vue"),
+        meta: { title: "Create Department", showInSidebar: false, auth: true },
+      },
+      {
+        path: "departments/:id/edit",
+        name: "DepartmentEdit",
+        component: () => import("@/views/departments/DepartmentEdit.vue"),
+        meta: { title: "Edit Department", showInSidebar: false, auth: true },
+      },
 
       {
         path: "review-requests",
