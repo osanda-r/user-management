@@ -24,7 +24,9 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login(username: string, password: string) {
-      const res = await api.post("/auth/login", { username, password }) as { data: LoginResponse };
+      const res = (await api.post("/auth/login", { username, password })) as {
+        data: LoginResponse;
+      };
       this.token = res.data.token;
       this.user = res.data.user;
       localStorage.setItem("token", this.token!);
@@ -32,6 +34,28 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
+      // update local login history: set logout_time for last open session for this user
+      try {
+        const userId = this.user?.user_id as number | undefined;
+        const raw = localStorage.getItem("login_history_local");
+        const baseRaw = raw ? JSON.parse(raw) : null;
+        const arr = Array.isArray(baseRaw) ? baseRaw : [];
+        if (userId !== undefined && arr.length) {
+          const idx = arr.findIndex((r: any) => r.user_id === userId && !r.logout_time);
+          if (idx !== -1) {
+            arr[idx].logout_time = new Date().toISOString();
+            localStorage.setItem("login_history_local", JSON.stringify(arr));
+            window.dispatchEvent(
+              new CustomEvent("login-history-updated", {
+                detail: { action: "logout", entry: arr[idx] },
+              })
+            );
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+
       this.token = null;
       this.user = null;
       localStorage.removeItem("token");

@@ -27,6 +27,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import usersData from "@/data/users.json";
+import loginsData from "@/data/login_history.json";
 import bcrypt from "bcryptjs";
 
 interface AppUser {
@@ -88,6 +89,29 @@ function login() {
   auth.user = appUser as AppUser;
   localStorage.setItem("token", token);
   localStorage.setItem("user", JSON.stringify(appUser));
+
+  // Record login in local login history and notify listeners
+  try {
+    const base = Array.isArray(loginsData) ? loginsData : [];
+    const local = JSON.parse(localStorage.getItem("login_history_local") || "null");
+    const merged = (local && Array.isArray(local) ? local : [...base]).slice();
+    const nextId = merged.length ? Math.max(...merged.map((r: any) => r.login_id)) + 1 : 1;
+    const newEntry = {
+      login_id: nextId,
+      user_id: user.user_id,
+      login_time: new Date().toISOString(),
+      logout_time: null,
+      ip_address: "127.0.0.1",
+      device_info: typeof navigator !== "undefined" ? navigator.userAgent : "",
+    };
+    merged.unshift(newEntry);
+    localStorage.setItem("login_history_local", JSON.stringify(merged));
+    window.dispatchEvent(
+      new CustomEvent("login-history-updated", { detail: { action: "login", entry: newEntry } })
+    );
+  } catch (e) {
+    console.warn("Unable to update local login history", e);
+  }
 
   // clear password field
   password.value = "";

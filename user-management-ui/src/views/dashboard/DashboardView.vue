@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import usersData from "@/data/users.json";
 import reviewsData from "@/data/review_requests.json";
@@ -146,12 +146,29 @@ const router = useRouter();
 
 const users = usersData || [];
 const reviews = reviewsData || [];
-const logins = loginsData || [];
+
+const logs = ref<Login[]>([]);
+
+function loadLogs() {
+  const base = Array.isArray(loginsData) ? loginsData : [];
+  const local = JSON.parse(localStorage.getItem("login_history_local") || "null");
+  logs.value = local && Array.isArray(local) ? local : [...base];
+}
+
+onMounted(() => {
+  loadLogs();
+  window.addEventListener("login-history-updated", loadLogs as EventListener);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("login-history-updated", loadLogs as EventListener);
+});
 
 const totalUsers = computed(() => users.length);
 const activeUsers = computed(
   () =>
-    users.filter((u: User) => (u.status || u.user_status || u.state || u.active) === "Active").length
+    users.filter((u: User) => (u.status || u.user_status || u.state || u.active) === "Active")
+      .length
 );
 const pendingReviews = computed(
   () => reviews.filter((r: Review) => r.request_status === "Pending").length
@@ -168,12 +185,14 @@ function isToday(iso?: string) {
   );
 }
 
-const loginToday = computed(() => logins.filter((l: Login) => isToday(l.login_time)).length);
+const loginToday = computed(() => logs.value.filter((l: Login) => isToday(l.login_time)).length);
 
 const recentLogins = computed(() =>
-  logins
+  logs.value
     .slice()
-    .sort((a: Login, b: Login) => new Date(b.login_time).getTime() - new Date(a.login_time).getTime())
+    .sort(
+      (a: Login, b: Login) => new Date(b.login_time).getTime() - new Date(a.login_time).getTime()
+    )
     .slice(0, 10)
 );
 
