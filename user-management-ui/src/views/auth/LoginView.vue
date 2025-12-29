@@ -57,7 +57,15 @@ function login() {
     return;
   }
   try {
-    const match = bcrypt.compareSync(password.value, user.password || "");
+    const stored = user.password || "";
+    const isBcryptHash = typeof stored === "string" && /^\$2[aby]\$/.test(stored);
+    let match = false;
+    if (isBcryptHash) {
+      match = bcrypt.compareSync(password.value, stored);
+    } else {
+      match = password.value === stored;
+    }
+
     if (!match) {
       error.value = "Invalid email or password.";
       return;
