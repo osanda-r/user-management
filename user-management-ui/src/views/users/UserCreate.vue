@@ -46,6 +46,20 @@ import { useRouter } from "vue-router";
 import usersData from "@/data/users.json";
 import departmentsData from "@/data/departments.json";
 
+interface User {
+  user_id?: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  status: string;
+  department_id: number | null;
+  last_login_at: string | null;
+}
+
 const router = useRouter();
 
 const form = reactive({
@@ -77,7 +91,7 @@ function onSave() {
   const additions = JSON.parse(localStorage.getItem("users_additions") || "[]") || [];
   const maxId = base
     .concat(additions)
-    .reduce((m: number, u: any) => Math.max(m, u.user_id || 0), 0);
+    .reduce((m: number, u: User) => Math.max(m, u.user_id || 0), 0);
 
   const newUser = {
     user_id: maxId + 1,

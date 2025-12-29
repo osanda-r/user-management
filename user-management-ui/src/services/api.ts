@@ -3,7 +3,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 async function request(path: string, opts: RequestInit = {}) {
   const url = `${API_BASE}${path}`;
   const res = await fetch(url, opts);
-  let data: any = null;
+  let data: unknown = null;
   const text = await res.text();
   try {
     data = text ? JSON.parse(text) : null;
@@ -16,13 +16,13 @@ async function request(path: string, opts: RequestInit = {}) {
 
 const api = {
   get: (path: string) => request(path, { method: "GET" }),
-  post: (path: string, body?: any) =>
+  post: (path: string, body?: unknown) =>
     request(path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     }),
-  put: (path: string, body?: any) =>
+  put: (path: string, body?: unknown) =>
     request(path, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

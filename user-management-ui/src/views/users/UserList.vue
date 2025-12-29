@@ -37,28 +37,28 @@
       :items-per-page="10"
       class="elevation-1 users-table"
     >
-      <template #item.user_id="{ item }">
+      <template v-slot:item.user_id="{ item }">
         <div class="text-caption">#{{ item.user_id }}</div>
       </template>
 
-      <template #item.username="{ item }">
+      <template v-slot:item.username="{ item }">
         <div>
           <div class="font-weight-medium">{{ item.full_name || item.username }}</div>
           <div class="text--secondary text-caption">{{ item.username }}</div>
         </div>
       </template>
 
-      <template #item.email="{ item }">
+      <template v-slot:item.email="{ item }">
         <div class="text-truncate">{{ item.email }}</div>
       </template>
 
-      <template #item.status="{ item }">
+      <template v-slot:item.status="{ item }">
         <v-chip :color="item.status === 'Active' ? 'success' : 'grey'" small>
           {{ item.status }}
         </v-chip>
       </template>
 
-      <template #item.actions="{ item }">
+      <template v-slot:item.actions="{ item }">
         <v-btn icon @click="editUser(item)" :title="`Edit ${item.username}`">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
@@ -67,7 +67,7 @@
         </v-btn>
       </template>
 
-      <template #no-data>
+      <template v-slot:no-data>
         <v-alert type="info">No users found.</v-alert>
       </template>
     </v-data-table>
@@ -98,12 +98,27 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import usersData from "../../data/users.json";
 
-const users = ref<any[]>([]);
+interface User {
+  user_id: number;
+  username: string;
+  full_name?: string;
+  email: string;
+  status: string;
+  role?: string;
+}
+
+const users = ref<User[]>([]);
 const router = useRouter();
 const search = ref("");
 const roleFilter = ref<string | null>(null);
 
-const headers = [
+const headers: {
+  text: string;
+  value: string;
+  width?: number;
+  sortable?: boolean;
+  align?: "start" | "center" | "end";
+}[] = [
   { text: "ID", value: "user_id", width: 80 },
   { text: "User", value: "username" },
   { text: "Email", value: "email" },
@@ -114,7 +129,7 @@ const headers = [
 const roles = computed(() => {
   const set = new Set<string>();
   users.value.forEach((u) => {
-    if ((u as any).role) set.add((u as any).role);
+    if (u.role) set.add(u.role);
   });
   return Array.from(set);
 });
@@ -131,7 +146,7 @@ onMounted(() => {
 
 const filteredUsers = computed(() => {
   const q = search.value && search.value.toLowerCase();
-  return users.value.filter((u: any) => {
+  return users.value.filter((u: User) => {
     const matchesSearch =
       !q ||
       (u.username && u.username.toLowerCase().includes(q)) ||
@@ -144,9 +159,15 @@ const filteredUsers = computed(() => {
 
 // edit dialog state
 const editDialog = ref(false);
-const editForm = ref<any>({ username: "", full_name: "", email: "", status: "Active" });
+const editForm = ref<User>({
+  user_id: 0,
+  username: "",
+  full_name: "",
+  email: "",
+  status: "Active",
+});
 
-function editUser(item: any) {
+function editUser(item: User) {
   editForm.value = { ...item };
   editDialog.value = true;
 }
@@ -155,9 +176,9 @@ function openCreate() {
   router.push({ name: "UserCreate" });
 }
 
-function deleteUser(item: any) {
+function deleteUser(item: User) {
   if (!confirm(`Delete ${item.username || item.full_name || item.user_id}?`)) return;
-  users.value = users.value.filter((u: any) => u.user_id !== item.user_id);
+  users.value = users.value.filter((u: User) => u.user_id !== item.user_id);
 }
 
 function closeEdit() {
@@ -168,12 +189,12 @@ function closeEdit() {
 function saveEdit() {
   if (!editForm.value) return;
   const id = editForm.value.user_id;
-  const idx = users.value.findIndex((u: any) => u.user_id === id);
+  const idx = users.value.findIndex((u: User) => u.user_id === id);
   if (idx >= 0) {
     users.value.splice(idx, 1, { ...editForm.value });
   } else {
     // new created locally (assign a temporary ID)
-    const maxId = users.value.reduce((m: number, u: any) => Math.max(m, u.user_id || 0), 0);
+    const maxId = users.value.reduce((m: number, u: User) => Math.max(m, u.user_id || 0), 0);
     editForm.value.user_id = maxId + 1;
     users.value.push({ ...editForm.value });
   }
@@ -181,7 +202,7 @@ function saveEdit() {
 }
 
 function exportCSV() {
-  const rows = filteredUsers.value.map((u: any) => [
+  const rows = filteredUsers.value.map((u: User) => [
     u.user_id,
     u.full_name || u.username,
     u.email,

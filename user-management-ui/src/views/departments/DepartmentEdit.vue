@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-4">
     <h2 class="ma-0 mb-4">Edit Department</h2>
-    <v-form v-if="loaded" @submit.prevent="save">
+    <v-form v-if="loaded && form" @submit.prevent="save">
       <v-text-field v-model="form.department_name" label="Name" required />
       <v-text-field v-model="form.department_code" label="Code" />
       <v-textarea v-model="form.description" label="Description" />
@@ -30,23 +30,37 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import baseData from "../../data/departments.json";
 
+interface Department {
+  department_id: number;
+  department_name: string;
+  department_code: string;
+  description: string;
+  parent_department: number | null;
+  status: string;
+}
+
+interface ParentOption {
+  label: string;
+  value: number;
+}
+
 const router = useRouter();
 const route = useRoute();
 const id = Number(route.params.id || 0);
-const form = ref<any>(null);
-const parentOptions = ref<any[]>([]);
+const form = ref<Department | null>(null);
+const parentOptions = ref<ParentOption[]>([]);
 const loaded = ref(false);
 
 onMounted(() => {
   const base = Array.isArray(baseData) ? baseData : [];
   const additions = JSON.parse(localStorage.getItem("departments_additions") || "[]") || [];
   const updates = JSON.parse(localStorage.getItem("departments_updates") || "{}") || {};
-  const all = [...base, ...additions].map((d: any) => {
+  const all = [...base, ...additions].map((d: Department) => {
     const upd = updates[d.department_id];
     return upd ? { ...d, ...upd } : d;
   });
-  parentOptions.value = all.map((d: any) => ({ label: d.department_name, value: d.department_id }));
-  const found = all.find((d: any) => d.department_id === id);
+  parentOptions.value = all.map((d: Department) => ({ label: d.department_name, value: d.department_id }));
+  const found = all.find((d: Department) => d.department_id === id);
   if (found) {
     form.value = { ...found };
     loaded.value = true;

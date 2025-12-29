@@ -33,19 +33,19 @@
       :items-per-page="10"
       class="elevation-1"
     >
-      <template #item.role_id="{ item }">
+      <template #[`item.role_id`]="{ item }">
         <div class="text-caption">#{{ item.role_id }}</div>
       </template>
 
-      <template #item.role_name="{ item }">
+      <template #[`item.role_name`]="{ item }">
         <div class="font-weight-medium">{{ item.role_name }}</div>
       </template>
 
-      <template #item.description="{ item }">
+      <template #[`item.description`]="{ item }">
         <div class="text-truncate">{{ item.description }}</div>
       </template>
 
-      <template #item.actions="{ item }">
+      <template #[`item.actions`]="{ item }">
         <v-btn icon @click="editRole(item)" :title="`Edit ${item.role_name}`">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
@@ -66,15 +66,21 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import rolesData from "../../data/roles.json";
 
+interface Role {
+  role_id: number;
+  role_name: string;
+  description: string;
+}
+
 const router = useRouter();
 const search = ref("");
-const roles = ref<any[]>([]);
+const roles = ref<Role[]>([]);
 
 const headers = [
   { text: "ID", value: "role_id", width: 80 },
   { text: "Role", value: "role_name" },
   { text: "Description", value: "description" },
-  { text: "Actions", value: "actions", sortable: false, align: "end", width: 120 },
+  { text: "Actions", value: "actions", sortable: false, align: "end" as const, width: 120 },
 ];
 
 function loadRoles() {
@@ -104,7 +110,7 @@ onMounted(() => {
 
 const filteredRoles = computed(() => {
   const q = search.value && search.value.toLowerCase();
-  return roles.value.filter((r: any) => {
+  return roles.value.filter((r: Role) => {
     return (
       !q ||
       (r.role_name && r.role_name.toLowerCase().includes(q)) ||
@@ -114,7 +120,7 @@ const filteredRoles = computed(() => {
   });
 });
 
-function editRole(item: any) {
+function editRole(item: Role) {
   router.push({ name: "RolePermissions", params: { roleId: item.role_id } }).catch(() => {});
 }
 
@@ -122,7 +128,7 @@ function openCreate() {
   router.push({ name: "Roles" }).catch(() => {});
 }
 
-function deleteRole(item: any) {
+function deleteRole(item: Role) {
   if (!confirm(`Delete ${item.role_name || item.role_id}?`)) return;
   const deletions = JSON.parse(localStorage.getItem("roles_deletions") || "[]") || [];
   deletions.push(item.role_id);
@@ -131,7 +137,7 @@ function deleteRole(item: any) {
 }
 
 function exportCSV() {
-  const rows = filteredRoles.value.map((r: any) => [r.role_id, r.role_name, r.description]);
+  const rows = filteredRoles.value.map((r: Role) => [r.role_id, r.role_name, r.description]);
   const csv = [
     "ID,Name,Description",
     ...rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")),

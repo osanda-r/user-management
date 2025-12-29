@@ -78,7 +78,7 @@
           </div>
 
           <v-data-table :items="recentLogins" :headers="loginHeaders" dense>
-            <template #item.login_time="{ item }">
+            <template #[`item.login_time`]="{ item }">
               {{ formatDate(item.login_time) }}
             </template>
           </v-data-table>
@@ -122,6 +122,26 @@ import usersData from "@/data/users.json";
 import reviewsData from "@/data/review_requests.json";
 import loginsData from "@/data/login_history.json";
 
+interface User {
+  status?: string;
+  user_status?: string;
+  state?: string;
+  active?: string;
+}
+
+interface Review {
+  request_status: string;
+}
+
+interface Login {
+  login_id: number;
+  user_id: number;
+  login_time: string;
+  logout_time: string | null;
+  ip_address: string;
+  device_info: string;
+}
+
 const router = useRouter();
 
 const users = usersData || [];
@@ -131,10 +151,10 @@ const logins = loginsData || [];
 const totalUsers = computed(() => users.length);
 const activeUsers = computed(
   () =>
-    users.filter((u: any) => (u.status || u.user_status || u.state || u.active) === "Active").length
+    users.filter((u: User) => (u.status || u.user_status || u.state || u.active) === "Active").length
 );
 const pendingReviews = computed(
-  () => reviews.filter((r: any) => r.request_status === "Pending").length
+  () => reviews.filter((r: Review) => r.request_status === "Pending").length
 );
 
 function isToday(iso?: string) {
@@ -148,12 +168,12 @@ function isToday(iso?: string) {
   );
 }
 
-const loginToday = computed(() => logins.filter((l: any) => isToday(l.login_time)).length);
+const loginToday = computed(() => logins.filter((l: Login) => isToday(l.login_time)).length);
 
 const recentLogins = computed(() =>
   logins
     .slice()
-    .sort((a: any, b: any) => new Date(b.login_time).getTime() - new Date(a.login_time).getTime())
+    .sort((a: Login, b: Login) => new Date(b.login_time).getTime() - new Date(a.login_time).getTime())
     .slice(0, 10)
 );
 

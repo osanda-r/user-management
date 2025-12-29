@@ -29,22 +29,43 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import baseData from "../../data/departments.json";
 
+interface DepartmentForm {
+  department_name: string;
+  department_code: string;
+  description: string;
+  parent_department: string | number | null;
+  status: string;
+}
+
+interface ParentOption {
+  label: string;
+  value: string | number;
+}
+
+interface Department {
+  department_id: number;
+  department_name: string;
+  department_code?: string;
+  description?: string;
+  parent_department?: string | number | null;
+  status?: string;
+}
+
 const router = useRouter();
-const form = ref<any>({
+const form = ref<DepartmentForm>({
   department_name: "",
   department_code: "",
   description: "",
   parent_department: null,
   status: "Active",
 });
-const parentOptions = ref<any[]>([]);
+const parentOptions = ref<ParentOption[]>([]);
 
 onMounted(() => {
-  // prepare parent options from base data + additions
   const base = Array.isArray(baseData) ? baseData : [];
   const additions = JSON.parse(localStorage.getItem("departments_additions") || "[]") || [];
   const all = [...base, ...additions];
-  parentOptions.value = all.map((d: any) => ({ label: d.department_name, value: d.department_id }));
+  parentOptions.value = all.map((d: Department) => ({ label: d.department_name, value: d.department_id }));
 });
 
 function cancel() {
@@ -54,7 +75,7 @@ function cancel() {
 function save() {
   const additions = JSON.parse(localStorage.getItem("departments_additions") || "[]") || [];
   const base = Array.isArray(baseData) ? baseData : [];
-  const maxId = Math.max(0, ...[...base, ...additions].map((d: any) => d.department_id || 0));
+  const maxId = Math.max(0, ...[...base, ...additions].map((d: Department) => d.department_id || 0));
   const newId = maxId + 1;
   const payload = { department_id: newId, ...form.value };
   additions.push(payload);

@@ -84,18 +84,27 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import departmentsData from "../../data/departments.json";
 
+interface Department {
+  department_id: number;
+  department_name: string;
+  department_code: string;
+  description: string;
+  parent_department: number | null;
+  status: string;
+}
+
 const router = useRouter();
 const search = ref("");
-const departments = ref<any[]>([]);
+const departments = ref<Department[]>([]);
 
 const headers = [
-  { text: "ID", value: "department_id", width: 80 },
-  { text: "Department", value: "department_name" },
-  { text: "Description", value: "description" },
-  { text: "Parent", value: "parent_department", width: 200 },
-  { text: "Status", value: "status", width: 140 },
-  { text: "Actions", value: "actions", sortable: false, align: "end", width: 120 },
-];
+  { title: "ID", key: "department_id", width: 80 },
+  { title: "Department", key: "department_name" },
+  { title: "Description", key: "description" },
+  { title: "Parent", key: "parent_department", width: 200 },
+  { title: "Status", key: "status", width: 140 },
+  { title: "Actions", key: "actions", sortable: false, align: "end" as const, width: 120 },
+] as const;
 
 function loadDepartments() {
   const base = Array.isArray(departmentsData) ? departmentsData : [];
@@ -119,7 +128,7 @@ onMounted(() => {
 
 const filteredDepartments = computed(() => {
   const q = search.value && search.value.toLowerCase();
-  return departments.value.filter((d: any) => {
+  return departments.value.filter((d: Department) => {
     const matchesSearch =
       !q ||
       (d.department_name && d.department_name.toLowerCase().includes(q)) ||
@@ -135,7 +144,7 @@ function parentName(parentId: number | null) {
   return p ? p.department_name : "";
 }
 
-function editDepartment(item: any) {
+function editDepartment(item: Department) {
   router.push({ name: "DepartmentEdit", params: { id: item.department_id } }).catch(() => {});
 }
 
@@ -143,13 +152,13 @@ function openCreate() {
   router.push({ name: "DepartmentCreate" }).catch(() => {});
 }
 
-function deleteDepartment(item: any) {
+function deleteDepartment(item: Department) {
   if (!confirm(`Delete ${item.department_name || item.department_id}?`)) return;
   departments.value = departments.value.filter((d) => d.department_id !== item.department_id);
 }
 
 function exportCSV() {
-  const rows = filteredDepartments.value.map((d: any) => [
+  const rows = filteredDepartments.value.map((d: Department) => [
     d.department_id,
     d.department_name,
     d.department_code,
