@@ -28,7 +28,7 @@
     </v-row>
 
     <v-data-table
-      :headers="headers"
+      
       :items="filteredRequests"
       item-key="request_id"
       :items-per-page="10"

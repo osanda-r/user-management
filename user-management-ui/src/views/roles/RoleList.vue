@@ -27,7 +27,6 @@
     </v-row>
 
     <v-data-table
-      :headers="headers"
       :items="filteredRoles"
       item-key="role_id"
       :items-per-page="10"

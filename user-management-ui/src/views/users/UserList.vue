@@ -31,18 +31,18 @@
     </v-row>
 
     <v-data-table
-      :headers="headers"
       :items="filteredUsers"
       item-key="user_id"
       :items-per-page="10"
-      class="elevation-1 users-table"
+      dense
+      class="elevation-1 users-table dense-table"
     >
       <template v-slot:item.user_id="{ item }">
         <div class="text-caption">#{{ item.user_id }}</div>
       </template>
 
       <template v-slot:item.username="{ item }">
-        <div>
+        <div class="username-block">
           <div class="font-weight-medium">{{ item.full_name || item.username }}</div>
           <div class="text--secondary text-caption">{{ item.username }}</div>
         </div>
@@ -53,7 +53,7 @@
       </template>
 
       <template v-slot:item.status="{ item }">
-        <v-chip :color="item.status === 'Active' ? 'success' : 'grey'" small>
+        <v-chip class="status-chip" :color="item.status === 'Active' ? 'success' : 'grey'" small>
           {{ item.status }}
         </v-chip>
       </template>
@@ -235,5 +235,19 @@ function exportCSV() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.dense-table .v-data-table__wrapper td,
+.dense-table .v-data-table__wrapper th {
+  padding: 8px 12px;
+}
+.users-table .v-data-table__wrapper th {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 600;
+}
+.username-block .text--secondary {
+  font-size: 0.85rem;
+}
+.status-chip {
+  min-width: 68px;
 }
 </style>
